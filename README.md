@@ -1,12 +1,21 @@
 mjolnir._asm.eventtap
 =====================
 
-For tapping into input events (mouse, keyboard, trackpad) for observation and possibly overriding them. This module requires [mjolnir_asm.eventtap.event](https://github.com/asmagill/mjolnir_asm.eventtap.event).
+For tapping into input events (mouse, keyboard, trackpad) for observation and possibly overriding them. **This module requires `mjolnir_asm.eventtap.event` which can be found in the eventtap/event folder of this repository.**
 
 This module is based primarily on code from the previous incarnation of Mjolnir by [Steven Degutis](https://github.com/sdegutis/).
 
 ### Luarocks Install
-This module is not available via luarocks yet... clone the repository (or download the zip file), enter the created directory and do the following (Note that you will have to install [mjolnir_asm.eventtap.event](https://github.com/asmagill/mjolnir_asm.eventtap.event) first):
+~~~bash
+$ luarocks [--tree=mjolnir] install mjolnir._asm.eventtap
+~~~
+
+### Local Install
+~~~bash
+$ git clone https://github.com/asmagill/mjolnir_asm.ipc
+$ cd mjolnir_asm.ipc/eventtap
+$ [PREFIX=/usr/local] make install
+~~~
 
 ~~~bash
 $ luarocks [--tree=mjolnir] make
@@ -23,11 +32,13 @@ eventtap = require("mjolnir._asm.eventtap")
 ~~~lua
 eventtap.new(types, fn) -> eventtap
 ~~~
-Returns a new event tap with the given function as the callback for the given event type; the eventtap not started automatically. The types param is a table which may contain values from table `mjolnir._asm.eventtap.event.types`.
+Returns a new event tap with the given function as the callback for the given event types; the eventtap not started automatically. The types param is a table which may contain values from table `mjolnir._asm.eventtap.event.types`. The event types are specified as bit-fields and are exclusively-or'ed together (see {"all"} below for why this is done.  This means { ...keyup, ...keydown, ...keyup }  is equivalent to { ...keydown }.
 
 The callback function takes an event object as its only parameter. It can optionally return two values: if the first one is truthy, this event is deleted from the system input event stream and not seen by any other app; if the second one is a table of events, they will each be posted along with this event.
 
-     e.g. callback(obj) -> bool[, table]
+    e.g. callback(obj) -> bool[, table]
+
+If you specify the argument `types` as the special table {"all"[, events to ignore]}, then *all* events (except those you optionally list *after* the "all" string) will trigger a callback, even events which are not defined in the [Quartz Event Reference](https://developer.apple.com/library/mac/documentation/Carbon/Reference/QuartzEventServicesRef/Reference/reference.html). The value or usefulness of these events is uncertain at this time, but perhaps a more knowledgable member of the Mjolnir community may be able to provide additional references or make something of these other events. (Event type 14, for example, *appears* to be an event posted as focus leaves the current application and then again as it enters another application, but **you have been warned** that this is merely conjecture at this point and has not been verified or tested thoroughly!)
 
 ~~~lua
 eventtap:start()

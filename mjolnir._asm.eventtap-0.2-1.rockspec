@@ -10,20 +10,20 @@ package = "mjolnir._asm.eventtap"
 --    changing the module's source code.
 --
 --    Note: the version must match the version in the filename.
-version = "0.1-1"
+version = "0.2-1"
 
 -- General metadata:
 
-local url = "github.com/asmagill/mjolnir_asm.eventtap"
+local url = "github.com/asmagill/mjolnir_asm.ipc"
 local desc = "For tapping into input events (mouse, keyboard, trackpad) for observation and possibly overriding them. This module requires mjolnir_asm.eventtap.event."
 
 -- LuaDist source
 source = {
-  tag = "0.1-1",
+  tag = "0.2-1",
   url = "git://github.com/LuaDist-testing/mjolnir._asm.eventtap.git"
 }
 -- Original source
--- source = {url = "git://" .. url}
+-- source = {url = "git://" .. url, dir = "mjolnir_asm.ipc/eventtap"}
 -- description = {
 --   summary = desc,
 --   detailed = desc,
@@ -36,7 +36,7 @@ source = {
 supported_platforms = {"macosx"}
 dependencies = {
   "lua >= 5.2",
-  "mjolnir._asm.eventtap.event",
+  "mjolnir._asm.eventtap.event >= 0.2-1",
 }
 
 -- Build rules:
